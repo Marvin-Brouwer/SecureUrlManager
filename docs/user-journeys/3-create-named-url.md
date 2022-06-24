@@ -14,7 +14,7 @@ EG:
 
 ```mermaid
 graph LR
-    Start(( POST URL )) --> |"./{name}/{url}"| Validate
+    Start(( POST URL )) --> |"./shorten"| Validate
 
     Validate{Check URL validity}
     Validate --> |Not valid| ReturnError
