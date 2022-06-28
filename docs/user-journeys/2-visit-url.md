@@ -19,19 +19,14 @@ When a user get's the eventual preview page when a visited url is neither Blocke
 graph LR
     Visit(( GET URL )) --> |"./{hash}"| Visit_ExistingUrl
 
-    Visit_ExistingUrl{Already registered?}
+    Visit_ExistingUrl{In database?}
     Visit_ExistingUrl --> |No| Visit_ReturnNotFound[Return NotFound response]
-    Visit_ExistingUrl --> |Yes| Visit_RegisterVisit([ Register visit ]) --> Visit_Validate
+    Visit_ExistingUrl --> |Yes| Visit_Validate
 
     Visit_Validate{Check URL validity}
     Visit_Validate --> |Is valid| Visit_ReturnRedirectResponse[Return Redirect response to long URL]
     Visit_Validate --> |Unknown| Visit_RegisterUnknownVisit([ Register unknown visit count in AI ]) --> ReturnPreviewResponse[Return Response with long URL and OG data]
     Visit_Validate --> |Not valid| Visit_ReturnError[Return Error response with additional data]
-
-    Report(( PUT URL )) --> |"./{hash}/report"| Report_ExistingUrl
-    Report_ExistingUrl{Already registered?}
-    Report_ExistingUrl --> |No| Report_ReturnNotFound[Return NotFound response]
-    Report_ExistingUrl --> |Yes| Report_MarkForReview[Mark the URL for review and return OK response]
 ```
 
 > **Note:**
