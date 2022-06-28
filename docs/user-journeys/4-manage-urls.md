@@ -31,6 +31,10 @@ graph LR
 For the admins:
 
 > The overview page will return a grouped result with a group of non-reviewed items at the top.
+>
+> Additionally there may be a separate list of known malicious url we get from an api or a github repo.
+> We may need a separate way to view these as read only?
+> Or just group them at the bottom.
 
 > **Note:** There is no delete functionality.
 > If a url is no longer considered malicious you have to update the status instead of deleting it. The same goes for any of the other statuses.

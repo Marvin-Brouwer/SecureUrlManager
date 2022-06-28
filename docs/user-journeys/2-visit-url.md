@@ -30,7 +30,7 @@ graph LR
 ```
 
 > **Note:**
-> Because we don't want to have to whitelist every unknown URL that is shortened we measure the amount of visits and use the counter to determine whether it needs to be added to the valid URL list.
+> Because we don't want to have to allowlist every unknown URL that is shortened we measure the amount of visits and use the counter to determine whether it needs to be added to the valid URL list.
 
 > **Note:**
 > When a URL is blocked by an admin either for being malicious or if it's on the block list a user will see a different page, however the API response shall be similar.
