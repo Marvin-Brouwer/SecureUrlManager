@@ -1,4 +1,4 @@
-# Manage threat
+# Manage urls
 
 As an admin, I would like to block a possibly malicious URL and mark it for review.
 
@@ -20,7 +20,7 @@ For the users:
 graph LR
     Report(( POST URL )) --> |"./{hash}/report-malicious" | Report_Inform
     Report(( POST URL )) --> |"./watchlist/review/hash/{hash}"| Report_ExistingUrl
-    Report(( POST URL )) --> |"./watchlist/review/url/{hash}"| Report_ExistingUrl
+    Report(( POST URL )) --> |"./watchlist/review/url/{url}"| Report_ExistingUrl
     Report_ExistingUrl{Already registered?}
     Report_ExistingUrl --> |No| Report_MarkForReview[Mark the URL for review and return OK response]
     Report_ExistingUrl --> |Yes| Report_MarkForReview[Mark the URL for review and return OK response]
