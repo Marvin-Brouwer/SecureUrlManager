@@ -4,7 +4,7 @@ As an admin, I'd like to create a named link for a URL.
   
 EG:  
 `https://www.mibo.com/room/lajsdfaoiue993lss` becomes
-`https://urls.valtech.com/hr/newyears-mibo`
+`https://urls.{company}.com/hr/newyears-mibo`
 
 ## User stories
 

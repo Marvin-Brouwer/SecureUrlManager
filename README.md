@@ -1,2 +1,3 @@
 # SecureUrlManager
-A URL shortener with an admin panel behind it using ADFS and OATH
+
+A URL shortener with an admin panel behind it using `Microsoft Entra ID`
