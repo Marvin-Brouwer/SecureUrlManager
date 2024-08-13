@@ -1,0 +1,82 @@
+/* https://andybrewer.github.io/mvp/#docs */
+
+form.default-form {
+    width: 100%;
+    min-width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 20ex;
+    grid-template-rows: 1fr;
+    gap: .8em;
+    grid-template-areas:
+        ". ."
+        ". .";
+    margin-bottom: 1em;
+}
+    form.default-form input[type="url"],
+    form.default-form a {
+        width: unset;
+        min-width: unset;
+        max-width: unset;
+        display: inline-block;
+        margin: 0;
+    }
+    form.default-form a {
+        border: 1px solid var(--color-bg-secondary);
+        border-radius: var(--border-radius);
+        padding: 0.4rem 0.8rem;
+    }
+    form.default-form a:hover {
+        border-color: var(--color-link);
+    }
+    form.default-form input[type="submit"],
+    form.default-form button[type="button"] {
+        margin: 0;
+        width: unset;
+        min-width: unset;
+        max-width: unset;
+        display: inline-block;
+    }
+    form.default-form button[type="button"] {
+        padding-top: .4rem;
+        padding-bottom: .4rem;
+        background-color: var(--color-secondary);
+        color: var(--color=-text-secondary);
+        border-color: var(--color-secondary-accent);
+    }
+
+@media (max-width: 700px) {
+    form.default-form {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+            "."
+            "."
+            "."
+            ".";
+    }
+}
+
+aside.summary {
+    width: 100%;
+    min-width: 100%;
+    position: relative;
+}
+
+.toastify {
+    top: 2ex !important;
+    left: 2ex;
+    padding: 1ex;
+    background-color: var(--color-secondary-accent) !important;
+    border: 2px solid var(--color-secondary);
+    color: var(--color-text);
+    border-radius: var(--border-radius);
+}
+
+dt {
+    font-weight: bold;
+}
+dd {
+    inset: 0;
+    margin-left: unset;
+}

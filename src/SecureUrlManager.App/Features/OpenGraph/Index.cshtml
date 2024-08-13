@@ -1,0 +1,33 @@
+﻿@model OpenGraphNet.OpenGraph;
+@{
+    Layout = null;
+
+    var image = Model.Metadata["og:image"].FirstOrDefault();
+
+    void Definition(string title, string metaDataKey, string? fallback = null)
+    {
+        var value = Model.Metadata[metaDataKey]?.FirstOrDefault()?.Value ?? fallback;
+        if (value is null) return;
+        
+        <dt>@title</dt>
+        <dd>@value</dd>
+    }
+}
+
+<dl>
+    @{ Definition("Site", "og:site_name"); }
+    @{ Definition("Url", "og:url", Model.OriginalUrl!.ToString()); }
+    @{ Definition("Type", "og:type"); }
+    @{ Definition("Page title", "og:title"); }
+    @{ Definition("Description", "og:description"); }
+</dl>
+
+@if(image is not null)
+{
+    var width = image.Properties["width"]?.FirstOrDefault()?.Value;
+    var alt = image.Properties.TryGetValue("alt", out var alts) 
+        ? alts.FirstOrDefault()?.Value
+        : null;
+
+    <img src="@image.Value" width="@width" alt="@alt" />
+}

@@ -1,0 +1,18 @@
+﻿@using SecureUrlManager.App.Features.Shared
+@model UrlRecord?;
+
+<form class="default-form" 
+    hx-post="/shorten"
+    hx-swap="innerHTML show:top"
+    hx-target="#main"
+>
+    <!-- TODO: URL MASK -->
+    <input type="url" required name="url" placeholder="https://..." value="@Model?.Original" />
+    <input type="submit" value="Shorten" />
+
+    @if(Model is not null)
+    {
+        <a href="@Model.ShortUrl" target="_blank">@Model.ShortUrl</a>
+        <button type="button" hx-on:click="copyHref('@Model.ShortUrl')">Copy</button>
+    }
+</form>

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SecureUrlManager.App</title>
+    <link rel="stylesheet" href="node_modules/modern-normalize/modern-normalize.css" async defer>
+    <link rel="stylesheet" href="node_modules/toastify-js/src/toastify.css" async defer>
+    <link rel="stylesheet" href="node_modules/mvp.css/mvp.css" async defer>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" defer />
+    <link rel="stylesheet" href="~/SecureUrlManager.App.styles.css" asp-append-version="true" defer />
+    <link rel="modulepreload" href="~/node_modules/toastify-js/src/toastify-es.js" async defer />
+</head>
+<body>
+    <script src="https://unpkg.com/htmx.org@2.0.1" async></script>
+    <div class="container" id="page-container">
+        @RenderBody()
+    </div>
+    <script src="~/js/site.js" asp-append-version="true" type="module" defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script defer>
+        // This code is here to preven submits before HTMX is loaded, we had some issues with that;
+        const pageContainer = document.getElementById('page-container');
+        pageContainer.style.visibility = "hidden";
+        document.addEventListener("DOMContentLoaded", () => {
+            var htmxLoaded = new Promise(async (res) => {
+                var loaded = false;
+                while (!loaded) {
+                    loaded = typeof htmx !== "undefined" && !!htmx;
+                    await new Promise(r => setTimeout(r, 10));
+                }
+                res(true);
+            });
+
+            htmxLoaded.then(() => {
+                pageContainer.style.visibility = "visible";
+            });
+        }, { once: true });
+        @{ #if DEBUG }
+        // It seems to be caused by browserlink
+        // Immediately redirect out once this happens
+        if (document.location.search) window.location.replace(document.location.origin);
+        @{ #endif }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "@secure-url-manager/app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser package for the SecureUrlManager",
+  "dependencies": {
+    "modern-normalize": "^2.0.0",
+    "mvp.css": "^1.15.0",
+    "toastify-js": "^1.12.0"
+  }
+}
