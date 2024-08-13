@@ -1,0 +1,19 @@
+﻿@model SecureUrlManager.App.Features.Shared.UrlRecord;
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<section>
+    // TODO text about the page being blocked by the org
+    <aside class="summary"
+           hx-indicator="#loading-indicator"
+           hx-trigger="load"
+           hx-post="/og-display"
+           hx-swap="innerHTML"
+           hx-include="#og-url, #og-show-image">
+        <span id="loading-indicator" class="htmx-indicator">Loading OG data...</span>
+        <input type="hidden" id="og-url" name="url" value="@Model.Original" />
+        <input type="hidden" id="og-show-image" name="loadImages" value="false" />
+    </aside>
+</section>

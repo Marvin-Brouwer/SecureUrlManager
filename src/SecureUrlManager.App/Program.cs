@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Razor;
-using SecureUrlManager.App.Features.Application;
+using SecureUrlManager.App.Features.Registration;
 using SecureUrlManager.App.Features.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,7 +48,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Application}/{action=Index}/{id?}"
+    pattern: "{controller=Registration}/{action=Index}/{id?}"
 );
 
 app.Run();

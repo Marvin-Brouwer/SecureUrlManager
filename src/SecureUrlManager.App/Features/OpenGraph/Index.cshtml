@@ -3,6 +3,7 @@
     Layout = null;
 
     var image = Model.Metadata["og:image"].FirstOrDefault();
+    var loadImages = Model.Metadata["og:LoadImages"]?.FirstOrDefault()?.Value != false.ToString();
 
     void Definition(string title, string metaDataKey, string? fallback = null)
     {
@@ -22,9 +23,12 @@
     @{ Definition("Description", "og:description"); }
 </dl>
 
-@if(image is not null)
+
+@if(loadImages && image is not null)
 {
-    var width = image.Properties["width"]?.FirstOrDefault()?.Value;
+    var width = image.Properties.TryGetValue("width", out var widths)
+        ? widths.FirstOrDefault()?.Value
+        : null;
     var alt = image.Properties.TryGetValue("alt", out var alts) 
         ? alts.FirstOrDefault()?.Value
         : null;

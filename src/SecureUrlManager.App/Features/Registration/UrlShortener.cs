@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using SecureUrlManager.App.Features.Shared;
 
-namespace SecureUrlManager.App.Features.Application
+namespace SecureUrlManager.App.Features.Registration
 {
     public class UrlShortener
     {

@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SecureUrlManager.App.Features.Application;
+namespace SecureUrlManager.App.Features.Registration;
 
-public class ApplicationController : Controller
+public class RegistrationController : Controller
 {
     private readonly UrlShortener _urlShortener;
 
-    public ApplicationController(UrlShortener urlShortener)
+    public RegistrationController(UrlShortener urlShortener)
     {
         _urlShortener = urlShortener;
     }
@@ -15,7 +15,7 @@ public class ApplicationController : Controller
     public IActionResult Index() => View();
 
     [HttpPost("shorten")]
-    public IActionResult ApplyForShortening([FromForm] ShortenApplicationRequest request)
+    public IActionResult ApplyForShortening([FromForm] ShortenUrlRequest request)
     {
         // TODO get from auth context
         var userId = "marvin.brouwer";
@@ -25,8 +25,8 @@ public class ApplicationController : Controller
         var result = _urlShortener.Shorten(userId, request.Url);
 
         return result.Match(
-            urlRecord => View("ApplicationSummary", urlRecord),
-            error => View("ApplicationError", error)
+            urlRecord => View("RegistrationSummary", urlRecord),
+            error => View("RegistrationError", error)
         );
     }
 }

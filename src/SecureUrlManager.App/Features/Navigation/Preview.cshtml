@@ -1,0 +1,18 @@
+﻿@model SecureUrlManager.App.Features.Shared.UrlRecord;
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<section>
+    // TODO text about the page you're about to visit is outside of the org
+    <aside class="summary"
+           hx-indicator="#loading-indicator"
+           hx-trigger="load"
+           hx-post="/og-display"
+           hx-swap="innerHTML"
+           hx-include="#og-url">
+        <span id="loading-indicator" class="htmx-indicator">Loading OG data...</span>
+        <input type="hidden" id="og-url" name="url" value="@Model.Original" />
+    </aside>
+</section>
