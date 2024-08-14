@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 using SecureUrlManager.App.Features.Registration;
 using SecureUrlManager.App.Features.Shared;
 
@@ -7,6 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+
+//var storageAccount = CloudStorageAccount.Parse(StorageConnectionString);
+var storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
+var tableClient = storageAccount.CreateCloudTableClient();
+var shortUrlTable = tableClient
+    .GetTableReference("SecureUrlManagerShortUrls");
+
+builder.Services.AddKeyedScoped("SecureUrlManagerShortUrls", (_ , _) => shortUrlTable);
+builder.Services.AddSingleton(tableClient);
 
 builder.Services.AddSingleton<HashGenerator>();
 builder.Services.AddTransient<UrlShortener>();
@@ -51,4 +63,9 @@ app.MapControllerRoute(
     pattern: "{controller=Registration}/{action=Index}/{id?}"
 );
 
-app.Run();
+
+await shortUrlTable
+    .CreateIfNotExistsAsync();
+
+await app
+    .RunAsync();

@@ -13,9 +13,6 @@ public class OpenGraphController : Controller
         _urlShortener = urlShortener;
     }
 
-    // TODO, this page will have a big box to "shorten" or a big button to log in if you're not
-    public IActionResult Index() => View();
-
     [HttpPost("og-display")]
     public async Task<IActionResult> Index([FromForm] OpenGraphRequest request)
     {

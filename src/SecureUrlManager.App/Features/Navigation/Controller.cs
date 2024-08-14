@@ -1,4 +1,6 @@
+using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage.Table;
 using SecureUrlManager.App.Features.Shared;
 using System.Net;
 
@@ -6,12 +8,38 @@ namespace SecureUrlManager.App.Features.Navigation;
 
 public class NavigationController : Controller
 {
-    //// TODO, this page will have a big box to "shorten" or a big button to log in if you're not
-    //public IActionResult Index() => Redirect("/");
+    private readonly CloudTable _urlTable;
+
+    public NavigationController([FromKeyedServices("SecureUrlManagerShortUrls")] CloudTable urlTable)
+    {
+        _urlTable = urlTable;
+    }
 
     [HttpGet, Route("/{creator}/{hash}")]
-    public IActionResult Index(string creator, string hash)
+    public async Task<IActionResult> Index(string creator, string hash)
     {
+        var result = await FindUrlRecord(creator, hash);
+
+        return result.Match(
+            VerifyUrlRecord,
+            NotFoundView,
+            // TODO what do we do when an error occurs?
+            // Just log and blow up?
+            _ => NotFoundView()
+        );
+    }
+
+    private ViewResult NotFoundView()
+    {
+        var notFoundViewResult = View("NotFound");
+        notFoundViewResult.StatusCode = (int)HttpStatusCode.NotFound;
+
+        return notFoundViewResult;
+    }
+
+    private IActionResult VerifyUrlRecord(UrlRecord urlRecord)
+    {
+
         // TODO check if ! hash exists, redirect to 404 if no
         // TODO get hash from db, map => Success = redirect, Unknown = preview page, Unsafe = error page.
 
@@ -19,38 +47,37 @@ public class NavigationController : Controller
         // https://localhost:7180/marvin.brouwer/6F34F935
         // https://localhost:7180/marvin.brouwer/73E940F4
 
-        if (hash == "73E940F4")
+        // TODO uknown
+        if (urlRecord.Hash == "73E940F4")
         {
-            var record = new UrlRecord
-            {
-                Hash = hash,
-                Id = hash,
-                ShortUrl = new Uri("http://tempuri.com"),
-                StoredBy = creator,
-                Original = new Uri("https://www.conclusion.nl")
-            };
-            return View("Preview", record);
+            return View("Preview", urlRecord);
         }
-        if (hash == "C1B6E261")
+        // TODO blocked
+        if (urlRecord.Hash == "C1B6E261")
         {
-            var record = new UrlRecord
-            {
-                Hash = hash,
-                Id = hash,
-                ShortUrl = new Uri("http://tempuri.com"),
-                StoredBy = creator,
-                Original = new Uri("http://www.google.nl/")
-            };
-            return View("Blocked", record);
-        }
-        if (hash == "6F34F935")
-        {
-            return Redirect("https://www.google.nl");
+            return View("Blocked", urlRecord);
         }
 
-        var notFoundViewResult = View("NotFound");
-        notFoundViewResult.StatusCode = (int)HttpStatusCode.NotFound;
+        return Redirect(urlRecord.Original.ToString());
+    }
 
-        return notFoundViewResult;
+    private async Task<OptionalResult<UrlRecord>> FindUrlRecord(string creator, string hash)
+    {
+        try
+        {
+            var operation = new TableQuery<UrlRecord.Entity>()
+                .Where(TableQuery.GenerateFilterCondition(nameof(UrlRecord.Entity.PartitionKey), QueryComparisons.Equal, creator))
+                .Where(TableQuery.GenerateFilterCondition(nameof(UrlRecord.Entity.RowKey), QueryComparisons.Equal, hash))
+                .Take(1);
+
+            var tableEntity = await _urlTable.ExecuteQuerySegmentedAsync(operation, new TableContinuationToken());
+            if (tableEntity.Results.Count != 1) return new OptionalResult<UrlRecord>();
+            var urlRecord = tableEntity.Results.First();
+            return urlRecord.ToRecord();
+        }
+        catch (Exception ex)
+        {
+            return new OptionalResult<UrlRecord>(ex);
+        }
     }
 }
